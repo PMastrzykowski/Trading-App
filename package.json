@@ -1,0 +1,33 @@
+{
+  "name": "trading",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://pmastrzykowski.github.io/trading-app",
+  "dependencies": {
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-scripts": "1.1.4",
+    "chart.js": "^2.7.2",
+    "gh-pages": "^1.2.0",
+    "prop-types": "^15.6.0",
+    "react-addons-update": "^15.6.2",
+    "react-chartjs-2": "^2.6.4",
+    "react-modal": "^3.1.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-select": "^1.0.0-rc.10",
+    "redux": "^3.7.2",
+    "redux-persist": "^5.4.0",
+    "redux-thunk": "^2.2.0",
+    "uuid": "^3.1.0",
+    "whatwg-fetch": "^2.0.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  }
+}
