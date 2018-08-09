@@ -10,8 +10,8 @@ const AppRouter = () => (
     <div className="app">
     <Header />
       <Switch>
-        <Route path="/" component={PositionsPage} exact={true} />
-        <Route path="/settings" component={Settings} />
+        <Route path="/trading-app" component={PositionsPage} exact={true} />
+        <Route path="/trading-app/settings" component={Settings} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>
