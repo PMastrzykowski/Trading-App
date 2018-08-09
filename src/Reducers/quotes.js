@@ -12,10 +12,8 @@ export default (state = [], action) => {
               ...quote,
               ...action.updates
             };
-          } 
-          else {
-            return quote;
-          };
+          }
+          return quote;
         });
       case 'REMOVE_STOCKS':
         return state.filter((quote) => quote.symbol !== action.payload.stock);

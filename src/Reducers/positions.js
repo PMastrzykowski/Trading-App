@@ -12,9 +12,8 @@ export default (state = [], action) => {
             ...openParams,
             ...action.closeParams
           };
-        } else {
-          return openParams;
-        };
+        }
+        return openParams;
       });
     case 'RESET':
       return state = [];

@@ -1,4 +1,4 @@
-import React, {Component, componentWillMount} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { closePosition } from '../Actions/positions';
@@ -45,7 +45,7 @@ class PositionTable extends Component {
                     <div className="positionItem" onClick={() => this.wrapper(position.id)}>
                     <div className="angle"><i className={this.state.wrap===position.id?"fa fa-angle-right fa-rotate-90":"fa fa-angle-right"} aria-hidden="true"></i></div>
                     <div className="company">{position.symbol}</div>
-                    <div className={this.round((position.indicator=='long'? quote.bid-position.openPrice:position.openPrice-quote.ask)*position.volume)>0?'profit positive':'profit negative'}>{this.round((position.indicator=='long'? quote.bid-position.openPrice:position.openPrice-quote.ask)*position.volume)}</div>
+                    <div className={this.round((position.indicator==='long'? quote.bid-position.openPrice:position.openPrice-quote.ask)*position.volume)>0?'profit positive':'profit negative'}>{this.round((position.indicator==='long'? quote.bid-position.openPrice:position.openPrice-quote.ask)*position.volume)}</div>
                     <div className="close">
                         <button onClick={(e)=>{
                             e.stopPropagation();
@@ -55,11 +55,11 @@ class PositionTable extends Component {
                             this.props.closePosition({
                             id : position.id, 
                             status : 'close', 
-                            closePrice : this.round(position.indicator=='long'? quote.ask:quote.bid), 
+                            closePrice : this.round(position.indicator==='long'? quote.ask:quote.bid), 
                             closeTime : Date.now(),
                             deposit: position.deposit,
                             commission: this.round((quote.ask-quote.bid)*position.volume),
-                            profit : this.round((position.indicator=='long'? quote.bid-position.openPrice:position.openPrice-quote.ask)*position.volume)
+                            profit : this.round((position.indicator==='long'? quote.bid-position.openPrice:position.openPrice-quote.ask)*position.volume)
                         })
                     }}>Close</button>
                     </div>
@@ -96,8 +96,9 @@ class PositionTable extends Component {
                     </div>
                 )
                 }
-                
-            }})
+            }
+            return null;
+        })
         
     }
     createBalanceTable(){
@@ -146,6 +147,8 @@ class PositionTable extends Component {
                     </div>
                     </div>
                 )   
+            } else {
+            return null;
             }
         })
         

@@ -1,5 +1,3 @@
-import uuid from 'uuid';
-
 // SET_QUOTE
 export const setQuote = (
   {

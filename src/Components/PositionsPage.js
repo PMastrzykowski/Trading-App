@@ -1,4 +1,4 @@
-import React, {Component, componentWillMount} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { setQuote, updateQuote } from '../Actions/quotes';
@@ -20,9 +20,9 @@ class PositionsPage extends Component {
   }
   tickData(){
     const url = String('https://api.iextrading.com/1.0/stock/market/batch?symbols='+this.props.stocksAvailable.join(',')+'&types=quote,logo&range=1m&last=1');
-    fetch(url).
-    then(results => results.json()).
-    then(data => 
+    fetch(url)
+    .then(results => results.json())
+    .then(data => 
       {
         this.props.stocksAvailable.map(company => this.dataFilling(company, data))
       }

@@ -18,9 +18,9 @@ class SearchStocksAvailable extends Component {
   }
   componentDidMount(){
     var url = 'https://api.iextrading.com/1.0/ref-data/symbols';
-    fetch(url).
-    then(results => results.json()).
-    then(data => 
+    fetch(url)
+    .then(results => results.json())
+    .then(data => 
       {
         this.setState({data:data});
       }
@@ -28,9 +28,9 @@ class SearchStocksAvailable extends Component {
   }
   searchData(e) {
     var queryData = [];
-    if(e.target.value != '') {
+    if(e.target.value !== '') {
       this.state.data.forEach(stock => {
-          if(stock.symbol.toLowerCase().indexOf(e.target.value)!=-1 || stock.name.toLowerCase().indexOf(e.target.value)!=-1) {
+          if(stock.symbol.toLowerCase().indexOf(e.target.value)!==-1 || stock.name.toLowerCase().indexOf(e.target.value)!==-1) {
             if(queryData.length < 10) {
               queryData.push(stock);
             }
@@ -40,10 +40,11 @@ class SearchStocksAvailable extends Component {
     this.setState({list: queryData});
   }
   exists(data){
-    var exists = false;
-    this.props.stocksAvailable.map(stock => {
+    var exists = this.props.stocksAvailable.map(stock => {
       if(data === stock)
-      exists = true;
+      return true;
+      else
+      return false;
     })
     return exists;
   }

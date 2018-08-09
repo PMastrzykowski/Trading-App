@@ -1,8 +1,7 @@
-import React, {Component, componentWillMount} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {clickQuote} from '../Actions/quotes';
-import { openPosition } from '../Actions/positions';
 
 class AssetTable extends Component {
     constructor(props){

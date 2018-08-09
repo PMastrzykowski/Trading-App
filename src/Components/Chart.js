@@ -20,9 +20,9 @@ class QuoteChart extends Component{
     }
     chartData(period){
         const url = String('https://api.iextrading.com/1.0/stock/'+this.props.clickQuote.quote.symbol+'/chart/'+period);
-        fetch(url).
-        then(results => results.json()).
-        then(data => 
+        fetch(url)
+        .then(results => results.json())
+        .then(data => 
           {
             var labels = [];
             var prices = [];

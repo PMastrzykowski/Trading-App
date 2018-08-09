@@ -1,7 +1,8 @@
-import React, {Component, componentWillMount} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {setStocks, removeStocks, countStocks} from '../Actions/stocksAvailable';
+import { mouseIn, mouseMove, mouseOut} from '../Actions/tooltips';
 
 class StocksAvailable extends Component {
   constructor(props){
@@ -12,9 +13,9 @@ class StocksAvailable extends Component {
   fetchStocks(){
     this.props.countStocks(5);
     var url = 'https://api.iextrading.com/1.0/ref-data/symbols';
-    fetch(url).
-    then(results => results.json()).
-    then(data => 
+    fetch(url)
+    .then(results => results.json())
+    .then(data => 
       {
         this.addRandomStocks(data);
       }
@@ -23,12 +24,11 @@ class StocksAvailable extends Component {
   addRandomStocks(data){
     do {
       var rand = Math.floor(Math.random()*data.length);
-      var match = false;
-      this.props.stocksAvailable.map(stock => {
+      var match = this.props.stocksAvailable.map(stock => {
         if(stock!==data[rand].symbol){
-          match = false
+          return false
         } else {
-          match = true
+          return true
         }
       })
       if(!match)
@@ -37,14 +37,18 @@ class StocksAvailable extends Component {
   }
   mapStocksAvailable(){
     return this.props.stocksAvailable.map(stock => {
-      var isOpen = false
-      this.props.positions.map(position => {
+      var isOpen = this.props.positions.map(position => {
         if(position.symbol===stock && position.status==='open')
-          isOpen = true
+          return true
+          else
+          return false
       })
       if(isOpen){
         return(
-          <div key={stock} className="removeCompanyOpen">
+          <div key={stock} className="removeCompanyOpen"
+          onMouseOver={(e) => this.props.mouseIn(e, 'removeStock')}
+          onMouseMove={(e) => this.props.mouseMove(e)}
+          onMouseOut={this.props.mouseOut}>
           <i className="fa fa-thumb-tack" aria-hidden="true"></i> {stock} 
           </div>
         );
@@ -82,7 +86,10 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     setStocks: setStocks, 
     removeStocks: removeStocks, 
-    countStocks: countStocks
+    countStocks: countStocks,
+    mouseIn: mouseIn,
+    mouseMove: mouseMove,
+    mouseOut: mouseOut
   }, dispatch);
 }
 export default connect(mapStateToProps, mapDispatchToProps)(StocksAvailable);

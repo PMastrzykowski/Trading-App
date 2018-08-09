@@ -1,16 +1,18 @@
-import React, {Component, componentWillMount} from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import QuoteChart from './Chart';
 import { openPosition } from '../Actions/positions';
 import { clickQuoteClose} from '../Actions/quotes';
+import { mouseIn, mouseMove, mouseOut} from '../Actions/tooltips';
 
 class BookTrade extends Component {
     constructor(props){
         super(props);
         this.state = {
             volume: '100',
-            valid: true
+            valid: true,
+            hover: false
         }
         this.round=this.round.bind(this);
         this.handleVolume=this.handleVolume.bind(this);
@@ -59,28 +61,34 @@ class BookTrade extends Component {
                             </div>
                         <div className="transaction">
                             <div className="piece" id="pieceRight">
-                            <button id={!this.buyCheck()||!this.state.valid?'disabled':null} 
-                            onClick={() => {this.buyCheck()&&this.state.valid? this.props.openPosition({ 
+                            <button id={!this.buyCheck()||!this.state.valid?'disabled':null}
+                            onMouseOver={(e) => !this.buyCheck()||!this.state.valid?this.props.mouseIn(e, 'transaction'):null}
+                            onMouseMove={(e) => !this.buyCheck()||!this.state.valid?this.props.mouseMove(e):null}
+                            onMouseOut={this.props.mouseOut}
+                            onClick={() => {if(this.buyCheck()&&this.state.valid) this.props.openPosition({ 
                                 symbol : this.props.clickQuote.quote.symbol,
                                 indicator : 'long',
                                 volume : this.state.volume,
                                 openPrice : this.getPrices(this.props.clickQuote.quote.symbol)[0].ask,
                                 openTime : Date.now(),
                                 deposit: this.round(this.getPrices(this.props.clickQuote.quote.symbol)[0].ask*this.state.volume)
-                            }):null}}
+                            })}}
                             >BUY</button>
                             </div>
                             <div className="piece" id="pieceLeft">
                             <button 
                             id={!this.sellCheck()||!this.state.valid?'disabled':null} 
-                            onClick={() => {this.sellCheck()&&this.state.valid?this.props.openPosition({ 
+                            onMouseOver={(e) => !this.buyCheck()||!this.state.valid?this.props.mouseIn(e, 'transaction'):null}
+                            onMouseMove={(e) => !this.buyCheck()||!this.state.valid?this.props.mouseMove(e, 'transaction'):null}
+                            onMouseOut={this.props.mouseOut}
+                            onClick={() => {if(this.sellCheck()&&this.state.valid) this.props.openPosition({ 
                                 symbol : this.props.clickQuote.quote.symbol,
                                 indicator : 'short',
                                 volume : this.state.volume,
                                 openPrice : this.getPrices(this.props.clickQuote.quote.symbol)[0].bid,
                                 openTime : Date.now(),
                                 deposit: this.round(this.getPrices(this.props.clickQuote.quote.symbol)[0].bid*this.state.volume)
-                            }):null}
+                            })}
                         }>SELL</button>
                             </div>
                         </div>
@@ -91,7 +99,7 @@ class BookTrade extends Component {
             }else{
                 return(
                     <div className="alert">
-                    Your chart area is empty.
+                    Your chart area is empty. Select a stock from the left panel, <br/>or customize your available stocks in settings.
                     </div>
                 )
             }
@@ -108,7 +116,10 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
     return bindActionCreators({
         clickQuoteClose: clickQuoteClose,
-        openPosition: openPosition
+        openPosition: openPosition,
+        mouseIn: mouseIn,
+        mouseMove: mouseMove,
+        mouseOut: mouseOut
     }, dispatch);
 }
 export default connect(mapStateToProps, mapDispatchToProps)(BookTrade);
