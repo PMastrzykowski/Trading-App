@@ -24,11 +24,10 @@ class StocksAvailable extends Component {
   addRandomStocks(data){
     do {
       var rand = Math.floor(Math.random()*data.length);
-      var match = this.props.stocksAvailable.map(stock => {
+      var match = true;
+      this.props.stocksAvailable.forEach(stock => {
         if(stock!==data[rand].symbol){
-          return false
-        } else {
-          return true
+          match = false;
         }
       })
       if(!match)
@@ -37,11 +36,10 @@ class StocksAvailable extends Component {
   }
   mapStocksAvailable(){
     return this.props.stocksAvailable.map(stock => {
-      var isOpen = this.props.positions.map(position => {
+      var isOpen = false
+      this.props.positions.forEach(position => {
         if(position.symbol===stock && position.status==='open')
-          return true
-          else
-          return false
+        isOpen = true;
       })
       if(isOpen){
         return(
@@ -54,7 +52,9 @@ class StocksAvailable extends Component {
         );
       }else{
         return(
-          <div key={stock} className="removeCompany" onClick={() =>this.props.removeStocks({stock})}>
+          <div key={stock} className="removeCompany" onClick={() => {
+            this.props.removeStocks({stock})
+        }}>
           <i className="fa fa-times" aria-hidden="true"></i> {stock}
           </div>
         );

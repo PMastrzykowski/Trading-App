@@ -3,12 +3,13 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {setStocks, countStocks} from '../Actions/stocksAvailable';
  
+var stocksData = [];
 
 class SearchStocksAvailable extends Component {
   constructor() {
     super();
     this.state = {
-      data: [],
+      data: stocksData,
       list: undefined,
       listItems: undefined,
     }
@@ -17,57 +18,67 @@ class SearchStocksAvailable extends Component {
     this.searchData=this.searchData.bind(this);
   }
   componentDidMount(){
-    var url = 'https://api.iextrading.com/1.0/ref-data/symbols';
-    fetch(url)
-    .then(results => results.json())
-    .then(data => 
-      {
-        this.setState({data:data});
-      }
-    ).catch(error => console.log('Error:' + error))
+    if(stocksData.length === 0){
+      var url = 'https://api.iextrading.com/1.0/ref-data/symbols';
+      fetch(url)
+      .then(results => results.json())
+      .then(data => 
+        {
+          stocksData = data;
+          this.setState({data:data});
+        }
+      ).catch(error => console.log('Error:' + error))
+    }
   }
-  searchData(e) {
+  searchData(value) {
     var queryData = [];
-    if(e.target.value !== '') {
+    if(value !== '') {
       this.state.data.forEach(stock => {
-          if(stock.symbol.toLowerCase().indexOf(e.target.value)!==-1 || stock.name.toLowerCase().indexOf(e.target.value)!==-1) {
+          if(stock.symbol.toLowerCase().indexOf(value)!==-1 || stock.name.toLowerCase().indexOf(value)!==-1) {
             if(queryData.length < 10) {
               queryData.push(stock);
             }
           }
       });
     }
-    this.setState({list: queryData});
+    var final=[];
+    queryData.forEach(value => {
+      if(!this.exists(value.symbol)){
+        final.push(value);
+      }
+    })
+    this.setState({list: final});
   }
   exists(data){
-    var exists = this.props.stocksAvailable.map(stock => {
+    var exists = false
+    this.props.stocksAvailable.forEach(stock => {
       if(data === stock)
-      return true;
-      else
-      return false;
+      exists = true;
     })
     return exists;
   }
   listCreator(){
     if(this.state.list){
-    return this.state.list.map(value => {
-      if(!this.exists(value.symbol)){
-        return(
+      var list = this.state.list.slice();
+    return list.map((value, index) => 
           <div className="addCompany" key={value.symbol} onClick={() =>{
           this.props.countStocks(1);
-          this.props.setStocks(value.symbol)}}>
+          this.props.setStocks(value.symbol);
+          var newArray = this.state.list.slice();
+          newArray.splice(index, 1);
+          this.setState({
+            list: newArray
+          })
+        }
+        }>
             <i className="fa fa-plus" aria-hidden="true"></i> {value.symbol}, {value.name}
-        </div>);
-      }else{
-        return null
-      }
-    })
+        </div>)
   }
   }
   render() {
     return(
       <div className="settingProperty">
-      <input onChange={this.searchData} placeholder="Search Stocks" />
+      <input onChange={(e) => this.searchData(e.target.value)} ref={e => this.searchBox = e} placeholder="Search Stocks" />
       <div className="results">
         {this.state.data.length===0?
         <div className="spinner">
